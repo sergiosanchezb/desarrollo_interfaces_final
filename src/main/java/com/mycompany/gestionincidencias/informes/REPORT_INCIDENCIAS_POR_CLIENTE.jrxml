@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPORT_INCIDENCIAS_POR_CLIENTE" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5769cddc-b19b-4f19-9a40-ff845e1a5ec3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="23"/>
+	<parameter name="CLIENT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$F{SSB_Cliente_id}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     SSB_Ticket.`id` AS SSB_Ticket_id,
+     SSB_Ticket.`nombre` AS SSB_Ticket_nombre,
+     SSB_Ticket.`descripcion` AS SSB_Ticket_descripcion,
+     SSB_Ticket.`estado` AS SSB_Ticket_estado,
+     SSB_Ticket.`prioridad` AS SSB_Ticket_prioridad,
+     SSB_Ticket.`cliente` AS SSB_Ticket_cliente,
+     SSB_Ticket.`usuario_acceso` AS SSB_Ticket_usuario_acceso,
+     SSB_Ticket.`fecha_modificacion` AS SSB_Ticket_fecha_modificacion,
+     SSB_Cliente.`id` AS SSB_Cliente_id,
+     SSB_Cliente.`nombre` AS SSB_Cliente_nombre,
+     SSB_Cliente.`telefono` AS SSB_Cliente_telefono,
+     SSB_Cliente.`direccion` AS SSB_Cliente_direccion,
+     SSB_Cliente.`usuario_acceso` AS SSB_Cliente_usuario_acceso,
+     SSB_Cliente.`fecha_modificacion` AS SSB_Cliente_fecha_modificacion
+FROM
+     `SSB_Cliente` SSB_Cliente INNER JOIN `SSB_Ticket` SSB_Ticket ON SSB_Cliente.`id` = SSB_Ticket.`cliente`
+WHERE SSB_Ticket.`cliente`=$P{CLIENT}]]>
+	</queryString>
+	<field name="SSB_Ticket_id" class="java.lang.Integer"/>
+	<field name="SSB_Ticket_nombre" class="java.lang.String"/>
+	<field name="SSB_Ticket_descripcion" class="java.lang.String"/>
+	<field name="SSB_Ticket_estado" class="java.lang.String"/>
+	<field name="SSB_Ticket_prioridad" class="java.lang.String"/>
+	<field name="SSB_Ticket_cliente" class="java.lang.Integer"/>
+	<field name="SSB_Ticket_usuario_acceso" class="java.lang.Integer"/>
+	<field name="SSB_Ticket_fecha_modificacion" class="java.lang.String"/>
+	<field name="SSB_Cliente_id" class="java.lang.Integer"/>
+	<field name="SSB_Cliente_nombre" class="java.lang.String"/>
+	<field name="SSB_Cliente_telefono" class="java.lang.String"/>
+	<field name="SSB_Cliente_direccion" class="java.lang.String"/>
+	<field name="SSB_Cliente_usuario_acceso" class="java.lang.Integer"/>
+	<field name="SSB_Cliente_fecha_modificacion" class="java.sql.Timestamp"/>
+	<variable name="SUM_INFORMES" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{SSB_Ticket_id}]]></variableExpression>
+	</variable>
+	<group name="SSB_Cliente_nombre">
+		<groupExpression><![CDATA[$F{SSB_Cliente_nombre}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<staticText>
+				<reportElement x="36" y="11" width="494" height="49" uuid="11cbc8a3-cf33-4e18-90d6-cff8ed138b55"/>
+				<textElement>
+					<font size="24" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[INFORME DE INCIDENCIAS POR CLIENTE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="34" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="41" width="75" height="20" uuid="5ecaa6fe-cc5d-49e9-a064-8700e000e006"/>
+				<text><![CDATA[ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="75" y="41" width="100" height="20" uuid="2a12cba4-2d2a-4fa9-a612-2dae34ff8ee2"/>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="41" width="205" height="20" uuid="2e86a138-4193-4b4e-8d76-33e6368c8c9b"/>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="41" width="75" height="20" uuid="64eb3502-fcc8-493b-a93b-41e2e3df159f"/>
+				<text><![CDATA[ESTADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="455" y="41" width="100" height="20" uuid="753c830b-7f23-42f8-b15a-ce1430c59fd2"/>
+				<text><![CDATA[PRIORIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="10" width="78" height="20" uuid="7139dfd8-1548-4a87-8691-3c007d898907"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORMES DE ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="10" width="100" height="20" uuid="95ad29ac-3e89-4766-8625-d4ef50d365bd"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SSB_Cliente_nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="75" height="20" uuid="fcc4c4fe-6b51-4008-9c41-e3cd7b330fa4"/>
+				<textFieldExpression><![CDATA[$F{SSB_Ticket_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="0" width="100" height="20" uuid="321dbc4b-ea28-47b4-80fa-ded8a6d8bae9"/>
+				<textFieldExpression><![CDATA[$F{SSB_Ticket_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="0" width="205" height="20" uuid="b73792c5-b52c-4766-aad2-0a86b2c9bc33"/>
+				<textFieldExpression><![CDATA[$F{SSB_Ticket_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="75" height="20" uuid="065639a4-2164-47df-938c-d245efc5d86a"/>
+				<textFieldExpression><![CDATA[$F{SSB_Ticket_estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="0" width="100" height="20" uuid="b215c0f3-a0ab-4baa-b59b-4c54994a531b"/>
+				<textFieldExpression><![CDATA[$F{SSB_Ticket_prioridad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="34" width="100" height="20" uuid="fce19951-f041-445d-a852-461039f48a2e"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="34" width="80" height="20" uuid="e0f39a00-c33c-4618-a431-3d86821b2610"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="34" width="40" height="20" uuid="87977200-50e5-4484-8a5f-7968acdc0c6f"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="455" y="22" width="100" height="20" uuid="df10ade8-086a-4d64-873b-5bb13e367b40"/>
+				<textFieldExpression><![CDATA[$V{SUM_INFORMES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="349" y="22" width="106" height="20" uuid="6dbbc534-4ea2-4cab-8a5d-45c696f46b53"/>
+				<text><![CDATA[Total de Incidencias:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

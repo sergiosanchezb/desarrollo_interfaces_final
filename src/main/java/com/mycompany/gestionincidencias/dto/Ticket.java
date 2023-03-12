@@ -5,7 +5,7 @@ package com.mycompany.gestionincidencias.dto;
  * @author sergi
  */
 public class Ticket {
-    
+
     private String nombre;
     private String descripcion;
     private String estado;
@@ -22,7 +22,7 @@ public class Ticket {
         this.prioridad = prioridad;
         this.cliente = cliente;
     }
-    
+
     public String[] toArrayString(){
 
         String[] s = new String[5];

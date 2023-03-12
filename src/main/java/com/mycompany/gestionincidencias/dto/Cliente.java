@@ -6,9 +6,17 @@ package com.mycompany.gestionincidencias.dto;
  */
 public class Cliente {
     
+    private int id;
     private String nombre;
     private String telefono;
     private String direccion;
+    
+    public Cliente(int id, String nombre, String telefono, String direccion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.direccion = direccion;
+    }
 
     public Cliente(String nombre, String telefono, String direccion) {
         this.nombre = nombre;
@@ -17,6 +25,19 @@ public class Cliente {
     }
 
     public Cliente() {
+    }
+    
+    
+    public String[] toArrayString(){
+
+        String[] s = new String[5];
+        
+        s[0]=Integer.toString(this.id);
+        s[1]=this.nombre;
+        s[2]=this.telefono;
+        s[3]=this.direccion;
+
+        return s;
     }
 
     public String getNombre() {
@@ -41,6 +62,14 @@ public class Cliente {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     

@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 public class Util {
 
+    //GUARDAMOS EN VARIABLES LOS DATOS DE NUESTRA BBDD
     private final String bd = "appevent_grupo3";
     private final String login = "grupo3";
     private final String password = "&jP9n5z54";
@@ -22,6 +23,7 @@ public class Util {
 
     }
 
+    //MÉTODO PARA LA CREACIÓN DE LA CONEXIÓN
     public Connection CreaConexion() throws ClassNotFoundException {
         try {
 

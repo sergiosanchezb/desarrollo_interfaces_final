@@ -7,6 +7,7 @@ package com.mycompany.gestionincidencias.view;
 import com.mycompany.gestionincidencias.util.CLogin;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -17,17 +18,14 @@ import javax.swing.JPanel;
  */
 public class Login extends javax.swing.JFrame {
 
-  
     /**
      * Creates new form Login
      */
     public Login() {
-        
+        this.setLocationRelativeTo(null);
         initComponents();
-
-
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,6 +36,7 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txt_usuario = new javax.swing.JTextField();
@@ -47,16 +46,23 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setExtendedState(6);
+        setResizable(false);
 
+        jPanel1.setMinimumSize(new java.awt.Dimension(728, 455));
+        jPanel1.setPreferredSize(new java.awt.Dimension(728, 455));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icono-usuario.png"))); // NOI18N
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 50, 60));
+
         jLabel2.setText("Usuario:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 80, 60, 30));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 60, 30));
 
         jLabel3.setText("Contraseña:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 130, 70, 20));
-        jPanel1.add(txt_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 140, 30));
-        jPanel1.add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, 140, 30));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 210, 70, 20));
+        jPanel1.add(txt_usuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 150, 140, 30));
+        jPanel1.add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 200, 140, 30));
 
         jb_login.setText("LOGIN");
         jb_login.addActionListener(new java.awt.event.ActionListener() {
@@ -64,24 +70,24 @@ public class Login extends javax.swing.JFrame {
                 jb_loginActionPerformed(evt);
             }
         });
-        jPanel1.add(jb_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 190, -1, -1));
+        jPanel1.add(jb_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 270, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Gill Sans Ultra Bold", 2, 14)); // NOI18N
         jLabel4.setText("Inicio de Sesión - Gestion de Incidencias");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 10, 360, 30));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 360, 30));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\sergi\\Documents\\NetBeansProjects\\GestionIncidencias\\src\\main\\java\\com\\mycompany\\gestionincidencias\\img\\background.jpg")); // NOI18N
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 550, 360));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/background.jpg"))); // NOI18N
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 500, 360));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -89,12 +95,17 @@ public class Login extends javax.swing.JFrame {
 
     private void jb_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_loginActionPerformed
         // TODO add your handling code here:
-        
+
         CLogin login = new CLogin();
-        boolean correcto=login.validaUsuario(txt_usuario, txt_password);
-        
-        if(correcto){
+
+        //COMPROBAMOS MEDIANTE UN BOOLEANO SI EL LOGIN ES CORRECTO
+        boolean correcto = login.validaUsuario(txt_usuario, txt_password);
+
+        //SI ES CORRECTO DESAPARECE LA VENTANA DE LOGIN
+        if (correcto) {
+
             dispose();
+
         }
     }//GEN-LAST:event_jb_loginActionPerformed
 
@@ -138,13 +149,11 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton jb_login;
     private javax.swing.JPasswordField txt_password;
     private javax.swing.JTextField txt_usuario;
     // End of variables declaration//GEN-END:variables
 
-    
-
 }
-

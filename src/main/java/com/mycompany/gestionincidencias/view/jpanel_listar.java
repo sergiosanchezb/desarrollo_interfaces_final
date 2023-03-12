@@ -6,8 +6,19 @@ package com.mycompany.gestionincidencias.view;
 
 import com.mycompany.gestionincidencias.dao.TicketDAO;
 import com.mycompany.gestionincidencias.dto.Ticket;
+import com.mycompany.gestionincidencias.dto.Usuario;
+import com.mycompany.gestionincidencias.negocio.LogicaNegocio;
+import com.mycompany.gestionincidencias.util.Util;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,25 +27,36 @@ import javax.swing.table.DefaultTableModel;
  */
 public class jpanel_listar extends javax.swing.JPanel {
 
+    Ticket ticket_ant;
+    Usuario usuario;
+
     /**
      * Creates new form jpanel_listar
      */
-    public jpanel_listar() throws SQLException {
+    public jpanel_listar(Usuario usuario_acceso) throws SQLException {
         initComponents();
-        
+
+        //ASIGNAMOS EN EL OBJETO USUARIO EL USUARIO_ACCESO PASADO POR PARÁMETRO
+        usuario = usuario_acceso;
+
+        //INSTANCIAMOS TICKET DAO PARA REALIZAR ACCIONES
         TicketDAO ticketsdao = new TicketDAO();
+
+        //DEFINIMOS UN MODELO PARA UNA TABLA
         DefaultTableModel dtm = new DefaultTableModel();
 
-        dtm.setColumnIdentifiers(new String[]{"Nombre", "Descripcion", "Estado", "Prioridad","Cliente"});
-        
+        //IDENTIFICAMOS LAS COLUMNAS PARA LA TABLA
+        dtm.setColumnIdentifiers(new String[]{"Nombre", "Descripcion", "Estado", "Prioridad", "Cliente"});
+
+        //CREAMOS UN LIST PARA ALMACENAR LOS TICKET Y LO RELLENAMOS
         List<Ticket> listatickets = ticketsdao.getTickets();
 
-        for(Ticket ticket : listatickets){
+        for (Ticket ticket : listatickets) {
 
             dtm.addRow(ticket.toArrayString());
         }
 
-        jtable_incidencias.setModel(dtm);
+        jtable_incidencia.setModel(dtm);
     }
 
     /**
@@ -47,9 +69,21 @@ public class jpanel_listar extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtable_incidencias = new javax.swing.JTable();
+        jtable_incidencia = new javax.swing.JTable();
+        jb_seleccionar = new com.mycompany.gestionincidencias.util.MiBoton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txt_nombre = new javax.swing.JTextField();
+        chk_prioridad = new javax.swing.JComboBox<>();
+        chk_estado = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txt_descripcion = new javax.swing.JTextArea();
+        jb_actualizar = new com.mycompany.gestionincidencias.util.MiBoton();
+        btn_borrar = new com.mycompany.gestionincidencias.util.MiBoton();
 
-        jtable_incidencias.setModel(new javax.swing.table.DefaultTableModel(
+        jtable_incidencia.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -68,23 +102,249 @@ public class jpanel_listar extends javax.swing.JPanel {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jtable_incidencias);
+        jtable_incidencia.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        jtable_incidencia.setPreferredSize(new java.awt.Dimension(880, 64));
+        jScrollPane1.setViewportView(jtable_incidencia);
+
+        jb_seleccionar.setBackground(new java.awt.Color(102, 102, 102));
+        jb_seleccionar.setText("SELECCIONAR");
+        jb_seleccionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_seleccionarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Nombre");
+
+        jLabel2.setText("Descripcion:");
+
+        jLabel3.setText("Estado:");
+
+        jLabel4.setText("Prioridad:");
+
+        chk_prioridad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alta", "Intermedia", "Baja" }));
+
+        chk_estado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Abierto", "En curso", "Cerrado" }));
+
+        txt_descripcion.setColumns(20);
+        txt_descripcion.setRows(5);
+        jScrollPane2.setViewportView(txt_descripcion);
+
+        jb_actualizar.setText("ACTUALIZAR TICKET");
+        jb_actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jb_actualizarActionPerformed(evt);
+            }
+        });
+
+        btn_borrar.setText("BORRAR TICKET");
+        btn_borrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_borrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(146, 146, 146)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jb_seleccionar, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(267, 267, 267)
+                                        .addComponent(jLabel4)))
+                                .addGap(18, 18, 18)
+                                .addComponent(chk_prioridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)
+                                .addComponent(jLabel3)
+                                .addGap(28, 28, 28)
+                                .addComponent(chk_estado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(132, 132, 132)
+                        .addComponent(jb_actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(56, 56, 56)
+                        .addComponent(btn_borrar, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 202, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jb_seleccionar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txt_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chk_estado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(chk_prioridad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jb_actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_borrar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jb_seleccionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_seleccionarActionPerformed
+        // TODO add your handling code here:
+
+        //ASIGNAMOS EN ROW LA CELDA SELECCIONADA
+        int row = jtable_incidencia.getSelectedRow();
+
+        ticket_ant = null;
+
+        try {
+            //ASINGAMOS EN TICKET_ANT EL TICKET SELECCIONADO
+            ticket_ant = LogicaNegocio.mostrartickets().get(row);
+        } catch (SQLException ex) {
+            Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //SETEAMOS EN LOS CAMPOS LOS DATOS NECESARIOS
+        txt_nombre.setText(ticket_ant.getNombre().toString());
+        txt_descripcion.setText(ticket_ant.getDescripcion().toString());
+        chk_estado.setSelectedItem(ticket_ant.getEstado().toString());
+        chk_prioridad.setSelectedItem(ticket_ant.getPrioridad().toString());
+
+    }//GEN-LAST:event_jb_seleccionarActionPerformed
+
+    private void jb_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jb_actualizarActionPerformed
+        // TODO add your handling code here:
+
+        //GUARDAMOS EN VARIABLES LOS DATOS NECESARIOS
+        String nombre = txt_nombre.getText();
+        String descripcion = txt_descripcion.getText();
+        String estado = chk_estado.getSelectedItem().toString();
+        String prioridad = chk_prioridad.getSelectedItem().toString();
+
+        //INSTANCIAMOS TICKET DAO PARA REALIZAR ACCIONES
+        TicketDAO ticketsdao = new TicketDAO();
+
+        try {
+            //HACEMOS USO DEL MÉTODO MODIFICARTICKET CON LOS DATOS PASADOS POR PARÁMETRO
+            ticketsdao.modificarTicket(ticket_ant.getNombre(), nombre, descripcion, estado, prioridad, usuario);
+
+        } catch (ParseException ex) {
+            Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //MOSTRAMOS POR PANTALLA UN MENSAJE PARA INDICARLE AL USUARIO QUE HA SIDO MODIFICADO CORRECTAMENTE
+        JOptionPane.showMessageDialog(null, "Ticket Modificado Correctamente");
+        txt_nombre.setText("");
+        txt_descripcion.setText("");
+
+        //HACEMOS USO DEL MÉTODO PARA REFRESCAR LA TABLA
+        refrescarjtable();
+    }//GEN-LAST:event_jb_actualizarActionPerformed
+
+    private void btn_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_borrarActionPerformed
+        // TODO add your handling code here:
+
+        //PEDIMOS POR PANTALLA UNA ACCION
+        int resp = JOptionPane.showConfirmDialog(null, "¿Esta seguro?", "Alerta!", JOptionPane.YES_NO_OPTION);
+
+        //SI LA RESPUESTA ES SI, REALIZAMOS LAS ACCIONES
+        if (resp == JOptionPane.YES_NO_OPTION) {
+
+            String nombre = txt_nombre.getText();
+
+            //INSTANCIAMOS TICKETDAO PARA REALIZAR ACCIONES
+            TicketDAO ticketsdao = new TicketDAO();
+
+            try {
+
+                //HACEMOS USO DEL MÉTODO ELIMINARTICKET PARA ELIMINAR EL ELEMENTO PASADO POR PARÁMETRO
+                ticketsdao.eliminarTicket(nombre);
+
+            } catch (ParseException ex) {
+                Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            //MOSTRAMOS POR PANTALLA UN MENSAJE PARA INDICAR AL USUARIO QUE SE HA ELIMINADO CORRECTAMENTE
+            JOptionPane.showMessageDialog(null, "Ticket Eliminado Correctamente");
+            txt_nombre.setText("");
+            txt_descripcion.setText("");
+
+            //MÉTODO PARA REFRESCAR LA TABLA
+            refrescarjtable();
+
+        }
+    }//GEN-LAST:event_btn_borrarActionPerformed
+
+    public void refrescarjtable() {
+
+        //DEFINIMOS UN MODELO PARA UNA TABLA
+        DefaultTableModel dtm = new DefaultTableModel();
+
+        //IDENTIFICAMOS LAS COLUMNAS
+        dtm.setColumnIdentifiers(new String[]{"Nombre", "Descripcion", "Estado", "Prioridad", "Cliente"});
+
+        //CREAMOS UN LIST PARA POSTERIORMENTE ALMACENAR LOS TICKETS
+        List<Ticket> listatickets = null;
+        try {
+
+            //HACEMOS USO DEL MÉTODO MOSTRARTICKETS DE LA CLASE LOGICANEGOCIO PARA RELLENAR EL LIST
+            listatickets = LogicaNegocio.mostrartickets();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Panel_Modificar.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //RECORREMOS EL LIST PARA AÑADIR AL MODELO DE LA TABLA LOS TICKET
+        for (Ticket ticket : listatickets) {
+            dtm.addRow(ticket.toArrayString());
+        }
+
+        //ASIGNAMOS EL MODELO CORRESPONDIENTE A LA TABLA
+        jtable_incidencia.setModel(dtm);
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.mycompany.gestionincidencias.util.MiBoton btn_borrar;
+    private javax.swing.JComboBox<String> chk_estado;
+    private javax.swing.JComboBox<String> chk_prioridad;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jtable_incidencias;
+    private javax.swing.JScrollPane jScrollPane2;
+    private com.mycompany.gestionincidencias.util.MiBoton jb_actualizar;
+    private com.mycompany.gestionincidencias.util.MiBoton jb_seleccionar;
+    private javax.swing.JTable jtable_incidencia;
+    private javax.swing.JTextArea txt_descripcion;
+    private javax.swing.JTextField txt_nombre;
     // End of variables declaration//GEN-END:variables
 }
